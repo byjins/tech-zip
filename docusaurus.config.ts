@@ -18,12 +18,12 @@ const config: Config = {
   url: "https://byjins.github.io",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: "/TIL",
+  baseUrl: "/byjins/",
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: "byjins", // Usually your GitHub org/user name.
-  projectName: "TIL", // Usually your repo name.
+  projectName: "byjins", // Usually your repo name.
 
   onBrokenLinks: "throw",
 
@@ -67,27 +67,26 @@ const config: Config = {
   ],
 
   themeConfig: {
-    // Replace with your project's social card
-    image: "img/docusaurus-social-card.jpg",
+    image: "https://github.com/byjins.png",
     colorMode: {
       respectPrefersColorScheme: true,
     },
     navbar: {
-      title: "My Site",
+      title: "byjins",
       logo: {
-        alt: "My Site Logo",
-        src: "img/logo.svg",
+        alt: "BLOG",
+        src: "https://github.com/byjins.png",
       },
       items: [
         {
           type: "docSidebar",
-          sidebarId: "tutorialSidebar",
+          sidebarId: "tilSidebar",
           position: "left",
-          label: "Tutorial",
+          label: "TIL",
         },
         { to: "/blog", label: "Blog", position: "left" },
         {
-          href: "https://github.com/facebook/docusaurus",
+          href: "https://github.com/byjins",
           label: "GitHub",
           position: "right",
         },
@@ -95,7 +94,7 @@ const config: Config = {
     },
     footer: {
       style: "dark",
-      copyright: `Copyright © byjins`,
+      copyright: `Copyright © ${new Date().getFullYear()} byjins`,
     },
     prism: {
       theme: prismThemes.github,
