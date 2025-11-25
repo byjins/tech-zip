@@ -80,11 +80,11 @@ const config: Config = {
       items: [
         {
           type: "docSidebar",
-          sidebarId: "tilSidebar",
+          sidebarId: "techSidebar",
           position: "left",
-          label: "TIL",
+          label: "Tech",
         },
-        { to: "/blog", label: "Blog", position: "left" },
+        { to: "/blog", label: "회고", position: "left" },
         {
           href: "https://github.com/byjins",
           label: "GitHub",
