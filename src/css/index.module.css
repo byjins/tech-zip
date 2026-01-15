@@ -1,0 +1,121 @@
+/* Home 페이지 스타일 */
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.profile {
+  display: flex;
+  gap: 3rem;
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.title {
+  font-size: 1.875rem;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  color: var(--ifm-heading-color);
+  margin: 0;
+}
+
+.descriptionTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--ifm-heading-color);
+  margin: 0;
+}
+
+.description {
+  margin-top: 0.75rem;
+  font-size: 1.125rem;
+  line-height: 1.75;
+  color: var(--ifm-color-content-secondary);
+  margin-bottom: 0;
+}
+
+.email {
+  display: inline-block;
+  font-size: 0.875rem;
+  color: var(--ifm-color-content-secondary);
+  text-decoration: underline;
+  text-underline-offset: 0.25rem;
+  transition: color 0.2s;
+}
+
+.email:hover {
+  color: var(--ifm-color-content);
+  text-decoration: underline;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--ifm-heading-color);
+  margin: 0;
+}
+
+.experienceItem {
+  padding: 1.25rem;
+  background-color: var(--ifm-color-emphasis-100);
+  border-radius: var(--ifm-global-radius);
+}
+
+.experienceContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.experienceCompany {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--ifm-heading-color);
+  margin: 0;
+}
+
+.experienceRole {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--ifm-color-content-secondary);
+  margin-bottom: 0;
+}
+
+.experiencePeriod {
+  font-size: 0.875rem;
+  color: var(--ifm-color-content-secondary);
+}
+
+.skills,
+.studying {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  background-color: var(--ifm-background-color);
+  font-size: 0.875rem;
+  color: var(--ifm-color-content);
+}

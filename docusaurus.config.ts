@@ -65,7 +65,6 @@ const config: Config = {
       } satisfies Preset.Options,
     ],
   ],
-
   themeConfig: {
     image: "https://github.com/byjins.png",
     colorMode: {

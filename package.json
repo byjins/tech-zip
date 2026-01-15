@@ -19,6 +19,7 @@
     "@docusaurus/preset-classic": "3.9.2",
     "@mdx-js/react": "^3.0.0",
     "clsx": "^2.0.0",
+    "dayjs": "^1.11.19",
     "prism-react-renderer": "^2.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
@@ -47,9 +48,9 @@
   "engines": {
     "node": ">=20.0"
   },
-  "homepage": "https://byjins.github.io/TIL.github.io",
+  "homepage": "https://byjins.github.io/tech-zip/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/byjins/TIL.github.io.git"
+    "url": "https://github.com/byjins/tech-zip"
   }
 }
