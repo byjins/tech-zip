@@ -33,3 +33,28 @@
 .footer {
   padding: 0.5rem 1rem;
 }
+
+/* Blockquote 스타일 커스터마이징 */
+blockquote {
+  border-left: 4px solid var(--ifm-color-primary);
+  padding: .5rem 1rem;
+  margin: 1.5rem 0;
+  background-color: var(--ifm-color-emphasis-100);
+  border-radius: var(--ifm-global-radius);
+  font-style: italic;
+  color: var(--ifm-color-content-secondary);
+}
+
+blockquote p {
+  margin: 0;
+}
+
+blockquote p:not(:last-child) {
+  margin-bottom: 0.5rem;
+}
+
+/* 다크모드 blockquote 스타일 */
+[data-theme="dark"] blockquote {
+  background-color: var(--ifm-color-emphasis-200);
+  border-left-color: var(--ifm-color-primary);
+}
