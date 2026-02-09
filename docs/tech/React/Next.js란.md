@@ -7,7 +7,7 @@ title: Next.js는 React와 무엇이 다를까
 
 React를 어느 정도 써본 사람이라면 한 번쯤 이런 생각을 해봤을 것이다.
 
-> “React만으로도 잘 되는데, 왜 굳이 Next.js를 써야 할까?”
+> "React만으로도 잘 되는데, 왜 굳이 Next.js를 써야 할까?"
 
 이 질문에 제대로 답하려면  
 **Next.js가 무엇을 추가했는지**보다,  
@@ -32,9 +32,11 @@ React의 본질은 아주 단순하다.
 - 데이터 패칭 전략 ❌
 - 서버 실행 모델 ❌
 - SEO ❌
+- 빌드 시스템 ❌
+- 이미지 최적화 ❌
 
 이건 React의 한계라기보다는 **의도적인 선택**이다.  
-React는 “어떻게 그릴 것인가”만 책임진다.
+React는 "어떻게 그릴 것인가"만 책임진다.
 
 ---
 
@@ -44,55 +46,65 @@ SPA가 대세가 되면서 React는 빠르게 퍼졌지만, 실무에서는 곧 
 
 ### 1. 초기 로딩 문제
 
-- JS 번들 다운로드
-- React 실행
-- 데이터 요청
-- 렌더링
+```jsx
+// React만 사용할 때
+function App() {
+  return <div>Hello World</div>;
+}
+
+// 실제로는:
+// 1. 빈 HTML 다운로드
+// 2. JS 번들 다운로드 (수백 KB ~ 수 MB)
+// 3. React 실행
+// 4. 데이터 요청 (API 호출)
+// 5. 렌더링
+// 6. 화면 표시
+```
 
 > 화면이 보이기까지 너무 많은 단계를 거쳐야 했다.
-
----
 
 ### 2. SEO 문제
 
 React SPA는 기본적으로:
 
 ```html
-<div id="root"></div>
+<!DOCTYPE html>
+<html>
+  <body>
+    <div id="root"></div>
+    <script src="/bundle.js"></script>
+  </body>
+</html>
 ```
 
 검색 엔진 입장에서는  
 **내용이 없는 페이지**에 가깝다.
 
----
-
 ### 3. 프로젝트마다 반복되는 설정
 
-- Webpack / Babel 설정
-- 라우터 구성
-- 코드 스플리팅
+매번 새 프로젝트를 시작할 때마다:
+
+- Webpack / Vite / Rollup 설정
+- Babel / TypeScript 설정
+- 라우터 구성 (React Router)
+- 코드 스플리팅 설정
 - 환경 변수 관리
+- 이미지 최적화 설정
+- CSS 처리 (CSS Modules, Tailwind 등)
 
-> “매번 똑같은 인프라를 다시 만드는 느낌”
+> "매번 똑같은 인프라를 다시 만드는 느낌"
 
----
+### 4. 서버 렌더링의 복잡성
 
-## 그래서 등장한 해결책: 서버에서 React를 실행하자
+서버에서 React를 실행하려면:
 
-여기서 자연스럽게 나온 아이디어가 있다.
+- Node.js 서버 설정
+- ReactDOMServer 설정
+- Hydration 로직 구현
+- 라우팅 서버 측 처리
+- 데이터 페칭 전략 수립
 
-> “React를 서버에서 먼저 실행하면 어떨까?”
-
-- 서버에서 HTML을 미리 만들어서 내려주고
-- 브라우저에서는 이어서 React를 붙인다
-
-이 개념이 바로 **SSR(Server Side Rendering)** 이다.
-
-하지만 문제는:
-
-- 설정이 너무 복잡했고
-- 표준 패턴이 없었으며
-- 유지보수가 어려웠다
+이 모든 것을 직접 구현해야 했다.
 
 ---
 
@@ -100,13 +112,14 @@ React SPA는 기본적으로:
 
 Next.js는 이런 문제의식에서 출발했다.
 
-> **“React를 제대로 쓰기 위한 기본 구조를 제공하자”**
+> **"React를 제대로 쓰기 위한 기본 구조를 제공하자"**
 
 Next.js가 해결하려던 핵심은 다음이다.
 
 - 서버 렌더링을 쉽게
 - 설정을 최소화
 - 실무에서 바로 쓸 수 있는 구조 제공
+- 개발자 경험 향상
 
 즉, Next.js는  
 **React 위에 얹는 실행 환경(Runtime + Convention)** 이다.
@@ -115,40 +128,198 @@ Next.js가 해결하려던 핵심은 다음이다.
 
 ## React vs Next.js의 역할 차이
 
-| 구분        | React         | Next.js                               |
-| ----------- | ------------- | ------------------------------------- |
-| 역할        | UI 라이브러리 | React 프레임워크                      |
-| 관심사      | 렌더링        | 실행 환경 + 렌더링                    |
-| 서버        | 모름          | 서버 전제                             |
-| 라우팅      | 없음          | 파일 기반 (App Router / Pages Router) |
-| 데이터 패칭 | 직접 구현     | 서버 컴포넌트 async, fetch 캐시 등    |
-
-Next.js 13부터는 **App Router**(`app/` 디렉터리)가 권장된다. 파일/폴더 구조가 곧 라우트가 되고, 레이아웃·로딩·에러 UI를 라우트 단위로 둘 수 있다. 그밖에 Image 최적화, API Routes, Middleware 등 실무에 필요한 기능을 기본 제공한다.
+| 구분            | React         | Next.js                               |
+| --------------- | ------------- | ------------------------------------- |
+| **역할**        | UI 라이브러리 | React 프레임워크                      |
+| **관심사**      | 렌더링        | 실행 환경 + 렌더링                    |
+| **서버**        | 모름          | 서버 전제                             |
+| **라우팅**      | 없음          | 파일 기반 (App Router / Pages Router) |
+| **데이터 패칭** | 직접 구현     | Server Component, fetch 캐시 등       |
+| **빌드**        | 직접 설정     | 자동 최적화                           |
+| **이미지**      | 직접 처리     | 자동 최적화                           |
+| **폰트**        | 직접 로드     | 자동 최적화                           |
 
 ---
 
-## Next.js가 추가한 가장 큰 개념: 실행 환경의 분리
+## Next.js가 제공하는 핵심 기능들
 
-Next.js의 핵심은 **“어디서 실행되는가”**다.
+### 1. 파일 기반 라우팅
 
-- 서버에서 실행되는 코드
-- 브라우저에서 실행되는 코드
+**React만 사용할 때:**
 
-이걸 명확히 나눴다.
+```jsx
+// React Router 설정 필요
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-### Server / Client Component
-
-- **기본값: Server Component**  
-  서버에서만 실행되므로 번들에 포함되지 않고, DB/파일시스템에 직접 접근할 수 있다.
-- **상태, effect, 이벤트가 필요하면 Client Component**  
-  `"use client"`를 파일 최상단에 선언한다.
-
-```javascript
-"use client";
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/products/:id" element={<Product />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
 ```
 
-이 한 줄은 단순한 문법이 아니라 **실행 환경 선언**이다.  
-Client Component는 브라우저 번들에 포함되므로, 인터랙션이 필요한 부분에만 제한적으로 쓰는 것이 좋다.
+**Next.js (App Router):**
+
+```
+app/
+  page.js              // / 경로
+  about/
+    page.js            // /about 경로
+  products/
+    [id]/
+      page.js          // /products/:id 경로
+```
+
+파일 구조가 곧 라우트다.  
+설정 파일 없이 자동으로 라우팅이 구성된다.
+
+### 2. 서버와 클라이언트의 명확한 분리
+
+Next.js의 핵심은 **"어디서 실행되는가"**다.
+
+```jsx
+// Server Component (기본값)
+// 서버에서만 실행, 번들에 포함 안 됨
+async function ProductPage({ id }) {
+  const product = await db.product.findUnique({ where: { id } });
+  return <div>{product.name}</div>;
+}
+
+// Client Component
+("use client");
+function AddToCartButton() {
+  const [count, setCount] = useState(0);
+  return <button onClick={() => setCount((c) => c + 1)}>{count}</button>;
+}
+```
+
+이 한 줄(`'use client'`)은 단순한 문법이 아니라 **실행 환경 선언**이다.
+
+### 3. 다양한 렌더링 전략
+
+Next.js는 상황에 맞는 렌더링 방식을 선택할 수 있다:
+
+- **SSR (Server Side Rendering)**: 요청마다 서버에서 HTML 생성
+
+  ```jsx
+  // app/products/page.js
+  async function ProductsPage() {
+    const products = await fetchProducts(); // 매 요청마다 실행
+    return <ProductList products={products} />;
+  }
+  ```
+
+- **SSG (Static Site Generation)**: 빌드 시점에 한 번 생성
+
+  ```jsx
+  // pages/products.js (Pages Router)
+  export async function getStaticProps() {
+    const products = await fetchProducts();
+    return { props: { products } };
+  }
+  ```
+
+- **ISR (Incremental Static Regeneration)**: SSG + 주기적 재생성
+
+  ```jsx
+  export async function getStaticProps() {
+    const products = await fetchProducts();
+    return {
+      props: { products },
+      revalidate: 60, // 60초마다 재생성
+    };
+  }
+  ```
+
+- **Streaming**: HTML을 조각 내어 순차적으로 전달
+  ```jsx
+  async function Page() {
+    return (
+      <div>
+        <Suspense fallback={<Skeleton />}>
+          <SlowComponent /> {/* 나중에 스트리밍 */}
+        </Suspense>
+        <FastComponent /> {/* 먼저 표시 */}
+      </div>
+    );
+  }
+  ```
+
+### 4. 자동 최적화
+
+**이미지 최적화:**
+
+```jsx
+// React만 사용할 때
+<img src="/large-image.jpg" alt="..." />;
+// 문제: 큰 이미지를 그대로 전송
+
+// Next.js
+import Image from "next/image";
+<Image src="/large-image.jpg" width={500} height={300} alt="..." />;
+// 자동으로 최적화된 이미지 생성 및 지연 로딩
+```
+
+**폰트 최적화:**
+
+```jsx
+// React만 사용할 때
+<link href="https://fonts.googleapis.com/css2?family=Inter" />;
+// 문제: 외부 리소스 로딩 지연
+
+// Next.js
+import { Inter } from "next/font/google";
+const inter = Inter({ subsets: ["latin"] });
+// 자동으로 폰트 최적화 및 self-hosting
+```
+
+**코드 스플리팅:**
+
+- 페이지별로 자동 분리
+- 동적 import 자동 처리
+- 공통 코드 추출
+
+### 5. API Routes
+
+서버 API를 별도 백엔드 없이 구현 가능:
+
+```jsx
+// app/api/users/route.js
+export async function GET(request) {
+  const users = await db.user.findMany();
+  return Response.json(users);
+}
+
+export async function POST(request) {
+  const body = await request.json();
+  const user = await db.user.create({ data: body });
+  return Response.json(user);
+}
+```
+
+### 6. Middleware
+
+요청과 응답 사이에 로직 실행:
+
+```jsx
+// middleware.js
+export function middleware(request) {
+  // 인증 체크
+  // 리다이렉트
+  // 헤더 수정
+  // 등등
+}
+
+export const config = {
+  matcher: "/dashboard/:path*",
+};
+```
 
 ---
 
@@ -162,6 +333,7 @@ Client Component는 브라우저 번들에 포함되므로, 인터랙션이 필�
 - Reconciliation
 - 참조 비교
 - 불변성
+- Hooks 규칙
 
 이 모든 것은 그대로다.
 
@@ -169,18 +341,64 @@ Client Component는 브라우저 번들에 포함되므로, 인터랙션이 필�
 
 ---
 
-## SSR, SSG, ISR, Streaming은 “전략”이다
+## Next.js의 철학: Convention over Configuration
 
-Next.js는 여러 렌더링 방식을 제공하지만,  
-이것들은 React를 대체하는 개념이 아니다.
+Next.js는 **설정보다 관례**를 선호한다.
 
-- **SSR**: 요청마다 서버에서 HTML 생성 (실시간 데이터에 적합)
-- **SSG**: 빌드 시점에 한 번 생성 (변경 적은 콘텐츠에 적합)
-- **ISR**: SSG + 주기적 재생성. 빌드 없이 일정 간격으로 페이지를 갱신할 수 있다.
-- **Streaming**: HTML을 조각 내어 순차적으로 전달. 느린 부분이 있어도 먼저 그릴 수 있는 부분부터 보여 준다.
+**React만 사용할 때:**
 
-> 렌더링 규칙은 동일하고,  
-> 실행 시점과 갱신 주기만 다르다.
+- Webpack 설정 파일 (수백 줄)
+- Babel 설정
+- 라우터 설정
+- 코드 스플리팅 설정
+- 환경 변수 설정
+- 등등...
+
+**Next.js:**
+
+- `next.config.js` (최소한의 설정만)
+- 파일 구조가 곧 설정
+- 기본값이 최적화되어 있음
+
+---
+
+## Next.js의 두 가지 라우터
+
+### Pages Router (레거시, 여전히 지원됨)
+
+```
+pages/
+  index.js          // /
+  about.js          // /about
+  products/
+    [id].js         // /products/:id
+  api/
+    users.js        // /api/users
+```
+
+- 파일 기반 라우팅
+- `getServerSideProps`, `getStaticProps` 사용
+- 더 많은 제어권
+
+### App Router (권장, Next.js 13+)
+
+```
+app/
+  page.js           // /
+  layout.js         // 레이아웃
+  about/
+    page.js         // /about
+  products/
+    [id]/
+      page.js       // /products/:id
+  api/
+    users/
+      route.js      // /api/users
+```
+
+- Server Component 기본
+- `layout.js`, `loading.js`, `error.js` 등 특수 파일
+- 더 나은 성능과 개발자 경험
 
 ---
 
@@ -191,6 +409,7 @@ React 18 이후의 변화는 명확하다.
 - Concurrent Rendering
 - Server Component
 - Streaming
+- Suspense
 
 이 모든 건 **단일 실행 환경에서는 불가능한 모델**이다.
 
@@ -199,10 +418,60 @@ Next.js는 React가 가고자 하는 방향을
 
 ---
 
+## 실무에서 Next.js를 선택하는 이유
+
+### 1. 개발 속도
+
+- 설정 시간 절약
+- 표준 패턴 제공
+- 빠른 프로토타이핑
+
+### 2. 성능
+
+- 자동 최적화
+- 서버 렌더링
+- 이미지/폰트 최적화
+
+### 3. SEO
+
+- 서버 렌더링으로 검색 엔진 최적화
+- 메타데이터 관리 용이
+
+### 4. 생산성
+
+- 파일 구조만으로 라우팅
+- API Routes로 풀스택 개발
+- 타입 안정성 (TypeScript 지원)
+
+---
+
+## 언제 React만 사용하고, 언제 Next.js를 사용할까?
+
+### React만 사용하기 좋은 경우
+
+- 단순한 SPA
+- 내부 도구/대시보드
+- SEO가 중요하지 않음
+- 완전한 제어가 필요함
+- 이미 다른 프레임워크 사용 중
+
+### Next.js를 사용하기 좋은 경우
+
+- SEO가 중요한 웹사이트
+- 빠른 초기 로딩이 중요
+- 서버 렌더링이 필요
+- 풀스택 개발이 필요
+- 표준 패턴을 따르고 싶음
+- 프로덕션 최적화가 중요
+
+---
+
 ## 정리
 
 - React는 UI를 그리는 엔진이다
 - Next.js는 그 엔진을 실행시키는 환경이다
-- React만으로 부족해진 이유는 “렌더링”이 아니라 “실행” 때문이다
+- React만으로 부족해진 이유는 "렌더링"이 아니라 "실행 환경" 때문이다
 - Next.js는 React를 대체하지 않는다
 - React를 **제대로 쓰기 위한 전제**를 제공할 뿐이다
+
+Next.js는 React 개발자가 **인프라 구축에 시간을 쓰지 않고, 비즈니스 로직에 집중할 수 있게** 만든 프레임워크다.
